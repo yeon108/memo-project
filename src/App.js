@@ -16,11 +16,38 @@ function App() {
     // setMemos([...memos]);
     setMemos(newMemos);
   };
+  const addMemo = () => {
+    const now = new Date().getTime();
+    setMemos([
+      ...memos,
+      {
+        title: "Untitled",
+        content: "",
+        createdAt: now,
+        updatedAt: now,
+      },
+    ]);
+    setSelectedMemoIndex(memos.length);
+  };
+  const deleteMemo = (index) => {
+    const newMemos = [...memos];
 
+    newMemos.splice(index, 1);
+    setMemos(newMemos);
+    console.log(index);
+    console.log(selectedMemoIndex);
+    if ((index && selectedMemoIndex) === 0) {
+      setSelectedMemoIndex(0);
+    } else {
+      setSelectedMemoIndex(index - 1);
+    }
+  };
   return (
     <div className="App">
       <SideBar
         memos={memos}
+        addMemo={addMemo}
+        deleteMemo={deleteMemo}
         selectedMemoIndex={selectedMemoIndex}
         setSelectedMemoIndex={setSelectedMemoIndex}
       />

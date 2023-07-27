@@ -1,6 +1,15 @@
 import React from "react";
+import "./index.css";
 
 export default function MemoContainer({ memo, setMemo }) {
+  if (memo === undefined) {
+    return (
+      <div>
+        <h1>메모가 없습니다</h1>
+        <h2>새로운 메모를 추가하세요</h2>
+      </div>
+    );
+  }
   return (
     <div className="memoContainer">
       <div>
@@ -15,6 +24,7 @@ export default function MemoContainer({ memo, setMemo }) {
               updatedAt: new Date().getTime(),
             });
           }}
+          placeholder="Untitled"
         />
       </div>
       <div>
@@ -28,6 +38,7 @@ export default function MemoContainer({ memo, setMemo }) {
               updatedAt: new Date().getTime(),
             });
           }}
+          placeholder="fill the text"
         />
       </div>
     </div>

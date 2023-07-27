@@ -1,8 +1,9 @@
 import React from "react";
-import MemoItem from "./MemoItem";
+import MemoItem from "../MemoItem";
 
 export default function MemoList({
   memos,
+  deleteMemo,
   selectedMemoIndex,
   setSelectedMemoIndex,
 }) {
@@ -13,6 +14,11 @@ export default function MemoList({
           key={index}
           onClick={() => {
             setSelectedMemoIndex(index);
+          }}
+          deleteClickHandler={(e) => {
+            deleteMemo(index);
+
+            e.stopPropagation();
           }}
           isSelected={index === selectedMemoIndex}
         >

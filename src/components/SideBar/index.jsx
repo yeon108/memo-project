@@ -1,10 +1,13 @@
 import React from "react";
-import MemoList from "./MemoList";
-import SideBarHeader from "./SideBarHeader";
-import SideBarFooter from "./SideBarFooter";
+import MemoList from "../MemoList";
+import SideBarFooter from "../SideBarFooter";
+import SideBarHeader from "../ SideBarHeader";
+import "./index.css";
 
 export default function SideBar({
   memos,
+  addMemo,
+  deleteMemo,
   selectedMemoIndex,
   setSelectedMemoIndex,
 }) {
@@ -13,10 +16,11 @@ export default function SideBar({
       <SideBarHeader />
       <MemoList
         memos={memos}
+        deleteMemo={deleteMemo}
         selectedMemoIndex={selectedMemoIndex}
         setSelectedMemoIndex={setSelectedMemoIndex}
       />
-      <SideBarFooter />
+      <SideBarFooter onClick={addMemo} />
     </div>
   );
 }
