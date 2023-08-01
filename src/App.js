@@ -1,24 +1,34 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "./App.css";
 import MemoContainer from "./components/MemoContainer";
 import SideBar from "./components/SideBar";
+import { setItem, getItem } from "./lib/storage";
+import debounce from "lodash.debounce";
 
+const debouncedSetItem = debounce(setItem, 4000); //execute setItem() after 4sec
+//debouncedSetItem => This returns the setItem which applied the debounce function
 function App() {
-  const [memos, setMemos] = useState([
-    { title: "memo1", content: "This is memo 1", createdAt: 33, updatedAt: 33 },
-    { title: "memo2", content: "This is memo 2", createdAt: 1, updatedAt: 1 },
-  ]);
+  const [memos, setMemos] = useState(getItem("memo") || []); //[]=>undefined
+  console.log([]);
+
   const [selectedMemoIndex, setSelectedMemoIndex] = useState(0);
-  const setMemo = (newMemo) => {
-    const newMemos = [...memos];
-    newMemos[selectedMemoIndex] = newMemo;
-    console.log(memos);
-    // setMemos([...memos]);
-    setMemos(newMemos);
-  };
-  const addMemo = () => {
+
+  const setMemo = useCallback(
+    (newMemo) => {
+      setMemos((memos) => {
+        const newMemoArr = [...memos];
+        newMemoArr[selectedMemoIndex] = newMemo;
+        debouncedSetItem("memo", newMemoArr);
+        return newMemoArr;
+      });
+
+      // setMemos(newMemoArr) = setMemos([...memos]);
+    },
+    [selectedMemoIndex] //selectedMemoIndex 바뀌는경우 recreate the function
+  );
+  const addMemo = useCallback(() => {
     const now = new Date().getTime();
-    setMemos([
+    const newMemos = setMemos([
       ...memos,
       {
         title: "Untitled",
@@ -27,21 +37,30 @@ function App() {
         updatedAt: now,
       },
     ]);
-    setSelectedMemoIndex(memos.length);
-  };
-  const deleteMemo = (index) => {
-    const newMemos = [...memos];
 
-    newMemos.splice(index, 1);
-    setMemos(newMemos);
-    console.log(index);
-    console.log(selectedMemoIndex);
-    if ((index && selectedMemoIndex) === 0) {
-      setSelectedMemoIndex(0);
-    } else {
-      setSelectedMemoIndex(index - 1);
-    }
-  };
+    setSelectedMemoIndex(memos.length);
+    debouncedSetItem("memo", newMemos);
+  }, [memos]);
+
+  const deleteMemo = useCallback(
+    (index) => {
+      setMemos((memos) => {
+        const newMemoArr = [...memos];
+        newMemoArr.splice(index, 1);
+        debouncedSetItem("memo", newMemoArr);
+        return newMemoArr;
+      });
+
+      //setMemos(newMemoArr);
+
+      if ((index && selectedMemoIndex) === 0) {
+        setSelectedMemoIndex(0);
+      } else {
+        setSelectedMemoIndex(index - 1);
+      }
+    },
+    [selectedMemoIndex]
+  );
   return (
     <div className="App">
       <SideBar

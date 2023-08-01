@@ -7,6 +7,7 @@ export default function MemoContainer({ memo, setMemo }) {
       <div>
         <h1>메모가 없습니다</h1>
         <h2>새로운 메모를 추가하세요</h2>
+        {console.log("hi")}
       </div>
     );
   }
