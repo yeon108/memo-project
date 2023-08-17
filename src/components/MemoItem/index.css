@@ -1,6 +1,7 @@
 .MemoItem {
   box-sizing: border-box;
   width: 100%;
+  height: 30px;
   text-overflow: ellipsis;
   overflow: hidden;
   padding: 6px 8px;

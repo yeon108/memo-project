@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import MemoContainer from "./components/MemoContainer";
 import SideBar from "./components/SideBar";
@@ -8,10 +8,14 @@ import debounce from "lodash.debounce";
 const debouncedSetItem = debounce(setItem, 4000); //execute setItem() after 4sec
 //debouncedSetItem => This returns the setItem which applied the debounce function
 function App() {
-  const [memos, setMemos] = useState(getItem("memo") || []); //[]=>undefined
-  console.log([]);
+  const [memos, setMemos] = useState([]); //type
+  //[]=>undefined
 
   const [selectedMemoIndex, setSelectedMemoIndex] = useState(0);
+
+  useEffect(() => {
+    setMemos(getItem("memo"));
+  }, []);
 
   const setMemo = useCallback(
     (newMemo) => {
@@ -22,7 +26,11 @@ function App() {
         return newMemoArr;
       });
 
-      // setMemos(newMemoArr) = setMemos([...memos]);
+      // const newMemoArr = [...memos];
+      // newMemoArr[selectedMemoIndex] = newMemo;
+      // debouncedSetItem("memo", newMemoArr);
+      // setMemos(newMemoArr);
+      //  = setMemos([...memos]);
     },
     [selectedMemoIndex] //selectedMemoIndex 바뀌는경우 recreate the function
   );
@@ -31,7 +39,7 @@ function App() {
     const newMemos = setMemos([
       ...memos,
       {
-        title: "Untitled",
+        title: "",
         content: "",
         createdAt: now,
         updatedAt: now,
@@ -71,6 +79,7 @@ function App() {
         setSelectedMemoIndex={setSelectedMemoIndex}
       />
       <MemoContainer memo={memos[selectedMemoIndex]} setMemo={setMemo} />
+      {console.log(memos)}
     </div>
   );
 }

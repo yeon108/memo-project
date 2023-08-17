@@ -3,10 +3,13 @@ export function setItem(key, value) {
 }
 
 export function getItem(key) {
-  try {
-    return;
-    JSON.parse(localStorage.getItem(key));
-  } catch (err) {
-    console.log("error:", err.message);
+  const data = localStorage.getItem(key);
+  if (!data) {
+    return [];
   }
+  return JSON.parse(data);
+
+  //  catch (err) {
+  //   console.log("error:", err.message);
+  // }
 }
